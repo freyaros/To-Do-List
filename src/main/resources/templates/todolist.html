@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Spring Boot To-Do List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* General Body and Background */
+        body {
+            font-family: 'Merriwether', serif; /* Elegant serif font */
+            margin: 0;
+            padding: 20px;
+            background-image: url('/images/background-woods.jpg'); /* Your elegant wood background */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Keeps background fixed when scrolling */
+            color: #4a4a4a; /* Dark text for contrast on lighter elements */
+            display: flex; /* Use flexbox for centering */
+            justify-content: center;
+            align-items: flex-start; /* Align to top, not center vertically */
+            min-height: 100vh; /* Full viewport height */
+        }
+
+        /* Main Container for the To-Do List */
+        .container {
+            max-width: 700px; /* Slightly wider to give elements more space */
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white to see background */
+            padding: 30px 40px; /* More padding */
+            border-radius: 10px; /* Softly rounded corners */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Deeper shadow for elegance */
+            margin-top: 40px; /* Push down from the very top */
+            margin-bottom: 40px;
+            box-sizing: border-box; /* Include padding in width calculation */
+        }
+
+        /* Headings */
+        h1, h2 {
+            font-family: 'Playfair Display', serif; /* Distinct font for headings */
+            color: #2c3e50; /* Darker, more sophisticated color */
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Subtle separator */
+            padding-bottom: 10px;
+        }
+        h2 {
+            font-size: 1.5em;
+            margin-top: 30px;
+        }
+
+        /* Task Form */
+        .task-form {
+            background-color: #f8f8f8; /* Slightly off-white for distinction */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Inner shadow for depth */
+            display: flex; /* Use flex for input and button alignment */
+            gap: 10px; /* Space between input and button */
+            margin-bottom: 30px;
+        }
+
+        input[type="text"] {
+            flex-grow: 1; /* Input takes up available space */
+            padding: 12px 15px;
+            border: 1px solid #c9c9c9; /* Softer border */
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s ease; /* Smooth transition on focus */
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #7f8c8d; /* Focus color */
+            box-shadow: 0 0 5px rgba(127, 140, 141, 0.5);
+        }
+
+        button[type="submit"] {
+            padding: 12px 25px;
+            background-color: #7f8c8d; /* Muted, elegant button color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        button[type="submit"]:hover {
+            background-color: #95a5a6; /* Slightly lighter on hover */
+            transform: translateY(-2px); /* Slight lift effect */
+        }
+
+        /* Task List */
+        ul {
+            list-style-type: none;
+            padding: 0;
+            border: 1px solid rgba(0, 0, 0, 0.1); /* Subtle border around the list */
+            border-radius: 8px;
+            background-color: #fdfdfd; /* Very light background for list items */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        li {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08); /* Lighter separator */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+        li:hover {
+            background-color: #f2f2f2; /* Subtle hover effect */
+        }
+
+         /* Style the new form wrapper */
+        .toggle-form {
+            display: flex;
+            align-items: center;
+            flex-grow: 1; /* Allows the form/text to take up most space */
+            gap: 10px;
+        }
+
+        /* Style the actual checkbox */
+        .toggle-form input[type="checkbox"] {
+            /* Customize the size and look of the checkbox */
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        /* Style the label (which holds the text) */
+        .toggle-form label {
+            cursor: pointer;
+            flex-grow: 1; /* Allows the label text to push the delete button */
+        }
+
+        /* Remove the 'Mark Incomplete/Complete' link styles now that it's a checkbox */
+        .action-links {
+            /* Only contains the delete button now */
+            gap: 0; 
+        }
+
+        .delete-btn {
+            color: #c0392b; /* Muted red for delete */
+            border-color: #c0392b;
+        }
+        .delete-btn:hover {
+            background-color: #c0392b;
+            color: white;
+        }
+
+        /* Empty List Message */
+        
+        .empty-list-message  { /* Added a generic class for reliability */
+        text-align: center;
+        font-style: italic;
+        color: #666;
+        margin-top: 30px;
+        padding: 20px;
+        background-color: #f0f0f0;
+        border-radius: 8px;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My To-Do List</h1>
+
+        <div class="task-form">
+            <h2 style="display: none;">Add New Task</h2> 
+            <form th:action="@{/add}" th:object="${newTodoItem}" method="post" style="display: flex; width: 100%;">
+                <input type="text" th:field="*{task}" placeholder="Add a new task..." required>
+                <button type="submit">Add Task</button>
+            </form>
+        </div>
+        
+         <h2>Current Tasks</h2>
+        <ul>
+    <li th:each="item : ${todoItems}">
+        <input type="checkbox"
+               th:id="|checkbox-${item.id}|"
+               th:checked="${item.completed}"
+               onclick="window.location.href='/toggle/' + [[${item.id}]]" />
+
+        <label th:for="|checkbox-${item.id}|">
+            <span th:classappend="${item.completed} ? 'completed'" 
+                  th:text="${item.task}">Sample Task</span>
+        </label>
+        
+        <div class="action-links">
+            <a th:href="@{/delete/{id}(id=${item.id})}" class="delete-btn">Delete</a>
+        </div>
+    </li>
+</ul>
+
+<p th:if="${#lists.isEmpty(todoItems)}">
+    Your list is clear! Time to relax with a good book and coffee. 🎉
+</p>
+
+    </div>
+</body>
+</html>

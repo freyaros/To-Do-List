@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* Replicate the elegant CSS style */
+        body { font-family: 'Merriweather', serif; margin: 0; padding: 20px; background-image: url('/images/background-woods.jpg'); background-size: cover; background-position: center; background-attachment: fixed; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .login-container { max-width: 400px; width: 100%; background-color: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 10px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); }
+        h1 { font-family: 'Playfair Display', serif; color: #2c3e50; text-align: center; margin-bottom: 20px; }
+        input[type="text"], input[type="password"] { width: 100%; padding: 12px; margin: 8px 0 15px 0; display: inline-block; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background-color: #7f8c8d; color: white; padding: 14px 20px; margin: 8px 0; border: none; border-radius: 4px; cursor: pointer; width: 100%; font-size: 1.1em; }
+        button:hover { background-color: #95a5a6; }
+        .error { color: #c0392b; text-align: center; margin-bottom: 15px; }
+        .success { color: #27ae60; text-align: center; margin-bottom: 15px; }
+        .links { text-align: center; margin-top: 15px; }
+        .links a { color: #7f8c8d; text-decoration: none; }
+        .links a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Sign In</h1>
+        
+        <div th:if="${loginError}" class="error" th:text="${loginError}"></div>
+        <div th:if="${successMessage}" class="success" th:text="${successMessage}"></div>
+
+        <form method="post" th:action="@{/login}">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">Login</button>
+        </form>
+        
+        <div class="links">
+            <a th:href="@{/signup}">New User? Sign Up</a>
+        </div>
+    </div>
+</body>
+</html>
