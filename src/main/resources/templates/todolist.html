@@ -178,19 +178,28 @@
         </div>
         
          <h2>Current Tasks</h2>
-        <ul>
+<ul>
     <li th:each="item : ${todoItems}">
-        <input type="checkbox"
-               th:id="|checkbox-${item.id}|"
-               th:checked="${item.completed}"
-               onclick="window.location.href='/toggle/' + [[${item.id}]]" />
+        
+        <form th:action="@{/toggle/{id}/toggle(id=${item.id})}" method="post" style="display:inline-block;">
+            
+            <input 
+                type="checkbox"
+                th:id="|checkbox-${item.id}|"
+                th:checked="${item.completed}"
+                name="completed"
+                
+                onchange="this.form.submit()" 
+            />
+            
+            </form>
 
         <label th:for="|checkbox-${item.id}|">
             <span th:classappend="${item.completed} ? 'completed'" 
                   th:text="${item.task}">Sample Task</span>
         </label>
         
-        <div class="action-links">
+        <div class="action-links" style="display:inline-block;">
             <a th:href="@{/delete/{id}(id=${item.id})}" class="delete-btn">Delete</a>
         </div>
     </li>
@@ -199,6 +208,9 @@
 <p th:if="${#lists.isEmpty(todoItems)}">
     Your list is clear! Time to relax with a good book and coffee. 🎉
 </p>
+<form action="/logout" method="post">
+    <button type="submit">Logout</button>
+</form>
 
     </div>
 </body>

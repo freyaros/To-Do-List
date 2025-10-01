@@ -23,7 +23,7 @@ public class TodoItem {
 	private String task;
 
     @SuppressWarnings("unused")
-	private Boolean completed = false; // Default value is false
+	private Boolean completed; // Default value is false
     
  // ... (id, task, completed fields)
 
@@ -83,8 +83,8 @@ public class TodoItem {
 
 
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(User user2) {
+        this.user = user2;
     }
 
     public User getUser() {

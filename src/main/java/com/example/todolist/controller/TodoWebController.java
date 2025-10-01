@@ -21,7 +21,7 @@ public class TodoWebController {
     }
 
     // --- VIEW ALL TASKS (Index Page) ---
-    @GetMapping
+    @GetMapping("/")
     public String listTasks(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("todoItems", todoService.getAllTasks(user)); // Pass user
         model.addAttribute("newTodoItem", new TodoItem()); 
@@ -44,7 +44,7 @@ public class TodoWebController {
 
     
     // --- TOGGLE COMPLETION STATUS ---
-    @GetMapping("/toggle/{id}")
+    @PostMapping("/toggle/{id}/toggle")
     public String toggleTaskCompletion(@AuthenticationPrincipal User user, @PathVariable Long id) {
         todoService.getTaskById(id, user).ifPresent(task -> { // Pass user to service
             task.setCompleted(!task.isCompleted()); 

@@ -15,10 +15,11 @@ import jakarta.transaction.Transactional;
 @Service
 @Transactional
 public class TodoService {
+	
+	@Autowired
+    private TodoRepository todoRepository;
 
-    private final TodoRepository todoRepository;
-
-    @Autowired
+    
     public TodoService(TodoRepository todoRepository) {
         this.todoRepository = todoRepository;
     }
